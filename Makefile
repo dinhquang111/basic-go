@@ -4,10 +4,13 @@ DOCKER_REPO := $(DOCKER_USERNAME)/$(APP_NAME)
 VERSION := 1.0.0
 PORT := 8080
 
+push-code:
+	git add .
+	git commit -m "fix"
+	git push
 
 build:
 	go run main.go
-
 
 docker-build:
 	@echo "Building the Docker image..."
