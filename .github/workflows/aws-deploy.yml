@@ -40,7 +40,7 @@ jobs:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
         USER: ec2-user
-        IMAGE: ${{ env.CONTAINER_NAME }}:${{ env.IMAGE_TAG }}
+        IMAGE: $CONTAINER_NAME:$IMAGE_TAG
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
