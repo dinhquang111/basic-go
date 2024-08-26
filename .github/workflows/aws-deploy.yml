@@ -47,8 +47,6 @@ jobs:
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << 'EOF'
           IMAGE="${{ env.CONTAINER_NAME }}:${{ env.IMAGE_TAG }}"
           sudo docker pull $IMAGE
-          sudo docker stop my-container || true
-          sudo docker rm my-container || true
           sudo docker run -d --name my-container -p 80:8080 $IMAGE
         EOF
     
