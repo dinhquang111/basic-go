@@ -46,8 +46,8 @@ jobs:
         chmod 600 private_key.pem
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << EOF
           CONTAINER_NAME="${CONTAINER_NAME}"
-          IMAGE_TAG="${IMAGE_TAG}"
-          IMAGE="\${CONTAINER_NAME}:\${IMAGE_TAG}"
+          TAG="${IMAGE_TAG}"
+          IMAGE="\${CONTAINER_NAME}:\${TAG}"
           sudo docker images
           echo $IMAGE
         EOF
