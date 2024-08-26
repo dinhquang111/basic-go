@@ -35,15 +35,23 @@ jobs:
         docker push $CONTAINER_NAME:$IMAGE_TAG
         echo "image=$CONTAINER_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
     - name: Deploy to EC2
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
         USER: ec2-user
-        IMAGE: ${{ steps.build-image.outputs.image }}
+        IMAGE: $CONTAINER_NAME:$IMAGE_TAG
       run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
-        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} '
           sudo docker pull $IMAGE
           sudo docker stop my-container || true
           sudo docker rm my-container || true
