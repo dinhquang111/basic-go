@@ -40,12 +40,14 @@ jobs:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
         USER: ec2-user
-        IMAGE: $CONTAINER_NAME:${{ github.sha }}
+        DOCKER_IMAGE: $CONTAINER_NAME:$IMAGE_TAG
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << EOF
           sudo docker images
-          echo $IMAGE
+          
+          echo "Hello"
+          echo $DOCKER_IMAGE
         EOF
     
