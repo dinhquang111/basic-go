@@ -44,8 +44,11 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} \
-        "IMAGE=${CONTAINER_NAME}:${IMAGE_TAG} && \
-        sudo docker pull \${IMAGE} && \
-        sudo docker run -d --name my-container -p 80:8080 \${IMAGE}"
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << EOF
+          CONTAINER_NAME="${CONTAINER_NAME}"
+          IMAGE_TAG="${IMAGE_TAG}"
+          IMAGE="\${CONTAINER_NAME}:\${IMAGE_TAG}"
+          sudo docker pull \$IMAGE
+          sudo docker run -d --name my-container -p 80:8080 \$IMAGE
+        EOF
     
