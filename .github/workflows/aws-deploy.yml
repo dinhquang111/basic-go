@@ -49,5 +49,6 @@ jobs:
           IMAGE_TAG="${IMAGE_TAG}"
           IMAGE="\${CONTAINER_NAME}:\${IMAGE_TAG}"
           sudo docker images
+          echo $IMAGE
         EOF
     
