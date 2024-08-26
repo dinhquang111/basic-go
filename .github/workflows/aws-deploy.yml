@@ -5,11 +5,7 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: MY_AWS_REGION
-  ECR_REPOSITORY: MY_ECR_REPOSITORY
-  ECS_SERVICE: MY_ECS_SERVICE              
-  ECS_CLUSTER: MY_ECS_CLUSTER              
-  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION
+  AWS_REGION: ap-southeast-1
   CONTAINER_NAME: darthmalgus/basic-go-service
   
 permissions:
@@ -20,11 +16,9 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
@@ -35,25 +29,23 @@ jobs:
     - name: Build, tag, and push image to Docker Hub
       id: build-image
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $CONTAINER_NAME:$IMAGE_TAG .
         docker push $CONTAINER_NAME:$IMAGE_TAG
         echo "image=$CONTAINER_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-    # - name: Deploy to EC2
-    #   env:
-    #     PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-    #     HOST: ${{ secrets.EC2_HOST }}
-    #     USER: ec2-user
-    #   run: |
-    #     echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
-    #     ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
-    #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-    #       docker pull ${{ steps.login-ecr.outputs.registry }}/your-ecr-repo:${{ github.sha }}
-    #       docker stop my-container || true
-    #       docker rm my-container || true
-    #       docker run -d --name my-container -p 80:8080 ${{ steps.login-ecr.outputs.registry }}/your-ecr-repo:${{ github.sha }}
-    #     '
+    - name: Deploy to EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.EC2_HOST }}
+        USER: ec2-user
+        IMAGE: ${{ steps.build-image.outputs.image }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
+        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
+          docker pull $IMAGE
+          docker stop my-container || true
+          docker rm my-container || true
+          docker run -d --name my-container -p 80:8080 $IMAGE'
     
