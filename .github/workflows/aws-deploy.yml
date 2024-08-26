@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: ap-southeast-1
-  CONTAINER_NAME: darthmalgus/basic-go-service
+  CONTAINER_NAME: darthmalgus1997/basic-go-service
   
 permissions:
   contents: read
