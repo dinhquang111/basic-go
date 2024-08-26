@@ -46,6 +46,8 @@ jobs:
         chmod 600 private_key.pem
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << EOF
           sudo docker pull $DOCKER_IMAGE
+          sudo docker stop go-service
+          sudo docker rm go-service
           sudo docker run -d -p 80:8080 --name "go-service" $DOCKER_IMAGE
         EOF
     
