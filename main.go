@@ -9,7 +9,7 @@ import (
 
 func main() {
 	router := gin.Default()
-	version := 1
+	version := 2
 	router.GET("/ping/:name", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong " + c.Params.ByName("name"),
