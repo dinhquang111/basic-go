@@ -40,13 +40,15 @@ jobs:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
         USER: ec2-user
-        IMAGE: $CONTAINER_NAME:$IMAGE_TAG
+        IMAGE: ${{ env.CONTAINER_NAME }}:${{ env.IMAGE_TAG }}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} '
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << 'EOF'
+          IMAGE="${{ env.CONTAINER_NAME }}:${{ env.IMAGE_TAG }}"
           sudo docker pull $IMAGE
           sudo docker stop my-container || true
           sudo docker rm my-container || true
-          sudo docker run -d --name my-container -p 80:8080 $IMAGE'
+          sudo docker run -d --name my-container -p 80:8080 $IMAGE
+        EOF
     
