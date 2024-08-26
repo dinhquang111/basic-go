@@ -44,6 +44,9 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
+        echo $CONTAINER_NAME
+        echo $IMAGE_TAG
+        echo $CONTAINER_NAME:$IMAGE_TAG
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << EOF
           CONTAINER_NAME="${CONTAINER_NAME}"
           TAG="${IMAGE_TAG}"
