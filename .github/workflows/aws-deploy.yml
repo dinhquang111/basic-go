@@ -25,47 +25,35 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
    
-    - name: Build, tag, and push image to Amazon ECR
+    - name: Build, tag, and push image to Docker Hub
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        docker build -t $CONTAINER_NAME:$IMAGE_TAG .
+        docker push $CONTAINER_NAME:$IMAGE_TAG
+        echo "image=$CONTAINER_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }}
-
-    - name: Deploy to EC2
-      env:
-        PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        HOST: ${{ secrets.EC2_HOST }}
-        USER: ec2-user
-      run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
-        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-          docker pull ${{ steps.login-ecr.outputs.registry }}/your-ecr-repo:${{ github.sha }}
-          docker stop my-container || true
-          docker rm my-container || true
-          docker run -d --name my-container -p 80:8080 ${{ steps.login-ecr.outputs.registry }}/your-ecr-repo:${{ github.sha }}
-        '
-    # - name: Deploy Amazon ECS task definition
-    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-    #   with:
-    #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-    #     service: ${{ env.ECS_SERVICE }}
-    #     cluster: ${{ env.ECS_CLUSTER }}
-    #     wait-for-service-stability: true
+    # - name: Deploy to EC2
+    #   env:
+    #     PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+    #     HOST: ${{ secrets.EC2_HOST }}
+    #     USER: ec2-user
+    #   run: |
+    #     echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
+    #     ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
+    #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+    #       docker pull ${{ steps.login-ecr.outputs.registry }}/your-ecr-repo:${{ github.sha }}
+    #       docker stop my-container || true
+    #       docker rm my-container || true
+    #       docker run -d --name my-container -p 80:8080 ${{ steps.login-ecr.outputs.registry }}/your-ecr-repo:${{ github.sha }}
+    #     '
     
