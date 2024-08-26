@@ -40,7 +40,7 @@ jobs:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
         USER: ec2-user
-        IMAGE: $CONTAINER_NAME:$IMAGE_TAG
+        DOCKER_IMAGE: ${{ steps.build-image.outputs.image }}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
@@ -48,8 +48,8 @@ jobs:
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << EOF
           CONTAINER_NAME="${CONTAINER_NAME}"
           TAG="${IMAGE_TAG}"
-          IMAGE="\${CONTAINER_NAME}:\${TAG}"
+          IMAGE="${DOCKER_IMAGE}"
           sudo docker images
-          echo $IMAGE
+          echo $DOCKER_IMAGE
         EOF
     
