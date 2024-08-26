@@ -44,12 +44,7 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        echo $IMAGE
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${USER}@${HOST} << EOF
-          CONTAINER_NAME="${CONTAINER_NAME}"
-          TAG="${IMAGE_TAG}"
-          IMAGE="${DOCKER_IMAGE}"
-          sudo docker images
-          echo $DOCKER_IMAGE
+          sudo docker pull $DOCKER_IMAGE
         EOF
     
