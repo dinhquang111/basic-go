@@ -4,7 +4,7 @@ DOCKER_REPO := $(DOCKER_USERNAME)/$(APP_NAME)
 VERSION := 1.0.0
 PORT := 8080
 
-push-code:
+push:
 	@echo "Committing code to current branch..."
 	git add .
 	@powershell -Command " \
@@ -13,6 +13,18 @@ push-code:
 		git commit -m $$message; \
 		git push; \
 	"
+
+release:
+	@echo "Releasing code ..."
+	@powershell -Command " \
+		$$version = Read-Host 'Please enter relase version'; \
+		$$message = Read-Host 'Please enter relase message'; \
+		if ($$version -eq '') { echo 'Relase version cannot be empty'; exit 1 } \
+		git tag -a v$$version -m message; \
+		git push origin v$$version; \
+		gh release create $(TAG) --title "$(TITLE)" --notes "$(NOTES)"
+	"
+	@echo "Release created successfully."
 
 build:
 	go run main.go
