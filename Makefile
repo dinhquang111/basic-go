@@ -5,9 +5,14 @@ VERSION := 1.0.0
 PORT := 8080
 
 push-code:
+	@echo "Committing code to current branch..."
 	git add .
-	git commit -m "fix"
-	git push
+	@powershell -Command " \
+		$$message = Read-Host 'Please enter commit message'; \
+		if ($$message -eq '') { echo 'Commit message cannot be empty'; exit 1 } \
+		git commit -m '$$message'; \
+		git push; \
+	"
 
 build:
 	go run main.go
