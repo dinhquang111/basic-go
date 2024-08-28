@@ -10,7 +10,7 @@ push-code:
 	@powershell -Command " \
 		$$message = Read-Host 'Please enter commit message'; \
 		if ($$message -eq '') { echo 'Commit message cannot be empty'; exit 1 } \
-		git commit -m '$$message'; \
+		git commit -m $$message; \
 		git push; \
 	"
 
