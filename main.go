@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/consul/api"
 )
@@ -30,11 +29,10 @@ func readConsulConfig() string {
 	if pair == nil {
 		fmt.Println("Key 'SignalR.API/appsettings.Development.json' not found")
 	}
-
-	strVal := string(pair.Value)
-	if err != nil {
+	if pair != nil {
 		log.Fatalf("Consul value is nil: %s", err)
 	}
+	strVal := string(pair.Value)
 
 	var result map[string]interface{}
 	readJsonErr := json.Unmarshal([]byte(strVal), &result)
@@ -75,25 +73,25 @@ func connectElasticSearch(host string) *elasticsearch.Client {
 	return es
 }
 
-func validateIndexSearch(es *elasticsearch.Client) {
-	indexName := "cls-feature"
-	req := esapi.IndicesExistsRequest{
-		Index: []string{indexName},
-	}
-	res, err := req.Do(context.Background(), es)
-	if err != nil {
-		log.Fatalf("Error checking if the index exists: %s", err)
-	}
-	defer res.Body.Close()
+// func validateIndexSearch(es *elasticsearch.Client) {
+// 	indexName := "cls-feature"
+// 	req := esapi.IndicesExistsRequest{
+// 		Index: []string{indexName},
+// 	}
+// 	res, err := req.Do(context.Background(), es)
+// 	if err != nil {
+// 		log.Fatalf("Error checking if the index exists: %s", err)
+// 	}
+// 	defer res.Body.Close()
 
-	if res.StatusCode == 200 {
-		return
-	} else if res.StatusCode == 404 {
-		es.Indices.Create("cls-feature")
-	} else {
-		log.Fatalf("Error checking if the index exists: %s", err)
-	}
-}
+// 	if res.StatusCode == 200 {
+// 		return
+// 	} else if res.StatusCode == 404 {
+// 		es.Indices.Create("cls-feature")
+// 	} else {
+// 		log.Fatalf("Error checking if the index exists: %s", err)
+// 	}
+// }
 
 func insertSearch(es *elasticsearch.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
