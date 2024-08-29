@@ -26,7 +26,7 @@ release:
 	"
 	@echo "Release created successfully."
 
-build:
+run:
 	go run main.go
 
 docker-build:
