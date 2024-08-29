@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8"
@@ -155,20 +154,28 @@ func handleSearch(es *elasticsearch.Client) gin.HandlerFunc {
 	}
 }
 
-func main() {
-	var elasticSearchHost = readConsulConfig()
-	esClient := connectElasticSearch(elasticSearchHost)
-	fmt.Println(esClient)
-	router := gin.Default()
-	version := 4
-	router.GET("/ping/:name", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong " + c.Params.ByName("name"),
-			"version": "v" + strconv.Itoa(version),
-		})
-	})
+var (
+	Version   = "dev"
+	Commit    = "none"
+	BuildTime = "unknown"
+)
 
-	router.POST("/search", insertSearch(esClient))
-	router.GET("/search", handleSearch(esClient))
+func HealthCheckHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"version":   Version,
+		"commit":    Commit,
+		"buildTime": BuildTime,
+	})
+}
+
+func main() {
+	// var elasticSearchHost = readConsulConfig()
+	// esClient := connectElasticSearch(elasticSearchHost)
+	// fmt.Println(esClient)
+	router := gin.Default()
+	router.GET("/health", HealthCheckHandler)
+
+	// router.POST("/search", insertSearch(esClient))
+	// router.GET("/search", handleSearch(esClient))
 	router.Run(":8080")
 }
