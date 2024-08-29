@@ -29,6 +29,15 @@ release:
 run:
 	go run main.go
 
+merge:
+	@powershell -Command " \
+		$$targetBranch = Read-Host 'Enter target branch'; \
+		if ($$targetBranch -eq '') { echo 'Relase target branch cannot be empty'; exit 1 } \
+		git checkout $$targetBranch; \
+		git pull; \
+		gh pr create; \
+	"
+
 docker-build:
 	@echo "Building the Docker image..."
 	docker build -t $(DOCKER_REPO):$(VERSION) .
