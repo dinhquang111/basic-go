@@ -35,7 +35,7 @@ merge:
 		if ($$targetBranch -eq '') { echo 'Relase target branch cannot be empty'; exit 1 } \
 		git checkout $$targetBranch; \
 		git pull; \
-		gh pr create; \
+		gh pr create --base $$targetBranch; \
 	"
 
 docker-build:
