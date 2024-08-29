@@ -39,11 +39,9 @@ merge:
 		gh pr create --base $$targetBranch; \
 	"
 
-docker-build:
+docker-run:
 	@echo "Building the Docker image..."
 	docker build -t $(DOCKER_REPO):$(VERSION) .
-
-docker-run:
 	docker run -d -p ${PORT}:${PORT} --name ${APP_NAME} $(DOCKER_REPO):$(VERSION)
 
 docker-push: docker-build
