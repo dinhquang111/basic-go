@@ -27,7 +27,7 @@ release:
 	@echo "Release created successfully."
 
 run:
-	go run main.go
+	go run cmd/api/main.go
 
 merge:
 	@powershell -Command " \
