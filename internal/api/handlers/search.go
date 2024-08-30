@@ -1,4 +1,4 @@
-package handlesearch
+package handlers
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"test-go/elastic"
+	"test-go/internal/search"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +18,7 @@ func Insert(c *gin.Context) {
 			"message": "invalid json body",
 		})
 	}
-	res, err := elastic.EsClient.Index(string(elastic.Feature), strings.NewReader(string(body)))
+	res, err := search.EsClient.Index(string(search.Feature), strings.NewReader(string(body)))
 	fmt.Println(res, err)
 }
 
@@ -36,11 +36,11 @@ func Query(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal query"})
 		return
 	}
-	res, err := elastic.EsClient.Search(
-		elastic.EsClient.Search.WithContext(context.Background()),
-		elastic.EsClient.Search.WithIndex(string(elastic.All)),
-		elastic.EsClient.Search.WithBody(strings.NewReader(string(queryJSON))),
-		elastic.EsClient.Search.WithPretty(),
+	res, err := search.EsClient.Search(
+		search.EsClient.Search.WithContext(context.Background()),
+		search.EsClient.Search.WithIndex(string(search.All)),
+		search.EsClient.Search.WithBody(strings.NewReader(string(queryJSON))),
+		search.EsClient.Search.WithPretty(),
 	)
 	// Check for errors in the response
 	if err != nil {

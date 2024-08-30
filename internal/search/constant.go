@@ -1,4 +1,4 @@
-package elastic
+package search
 
 type ElasticIndex string
 
