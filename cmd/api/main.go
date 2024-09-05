@@ -5,6 +5,7 @@ import (
 	"log"
 	"test-go/internal/api/routes"
 	"test-go/internal/logger"
+	"test-go/internal/search"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,22 +14,19 @@ import (
 
 func readConsulConfig() string {
 	config := api.DefaultConfig()
-	config.Address = "http://192.168.222.150:8500"
+	config.Address = "http://localhost:8500"
 	client, err := api.NewClient(config)
 
 	if err != nil {
 		log.Fatalf("Error creating Consul client: %s", err)
 	}
 	kv := client.KV()
-	pair, _, err := kv.Get("SignalR.API/appsettings.Development.json", nil)
+	pair, _, err := kv.Get("cert-service/development", nil)
 	if err != nil {
 		log.Fatalf("Error creating Consul client: %s", err)
 	}
 	if pair == nil {
 		log.Fatalf("Key 'SignalR.API/appsettings.Development.json' not found")
-	}
-	if pair != nil {
-		log.Fatalf("Consul value is nil: %s", err)
 	}
 	strVal := string(pair.Value)
 
@@ -51,8 +49,8 @@ func readConsulConfig() string {
 
 func main() {
 	gin.SetMode(gin.ReleaseMode)
-	// var elasticSearchHost = readConsulConfig()
-	// search.ConnectElasticSearch(elasticSearchHost)
+	var elasticSearchHost = readConsulConfig()
+	search.ConnectElasticSearch(elasticSearchHost)
 
 	loggerPdt := logger.NewLogger()
 	router := gin.New()
