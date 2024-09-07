@@ -16,10 +16,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Building docker image...'
-                docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", ".")
-                echo 'Running container...'
-                docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").run("-p 8080:8080 --name ${DOCKER_CONTAINER_NAME}")
+                script {
+                    echo 'Building docker image...'
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", ".")
+                    echo 'Running container...'
+                    docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").run("-p 8080:8080 --name ${DOCKER_CONTAINER_NAME}")
+                }  
             }
         }
     }
