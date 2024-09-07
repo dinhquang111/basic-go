@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"test-go/internal/api/routes"
-	"test-go/internal/logger"
-	"test-go/internal/search"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/consul/api"
@@ -48,23 +45,23 @@ func readConsulConfig() string {
 }
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
-	var elasticSearchHost = readConsulConfig()
-	search.ConnectElasticSearch(elasticSearchHost)
+	// gin.SetMode(gin.ReleaseMode)
+	// var elasticSearchHost = readConsulConfig()
+	// search.ConnectElasticSearch(elasticSearchHost)
 
-	loggerPdt := logger.NewLogger()
+	// loggerPdt := logger.NewLogger()
 	router := gin.New()
-	router.Use(func(c *gin.Context) {
-		path := c.Request.URL.Path
-		start := time.Now()
-		c.Next()
-		latency := time.Since(start)
-		loggerPdt.Info("HTTP request",
-			logger.Field{Key: "status", Value: c.Writer.Status()},
-			logger.Field{Key: "method", Value: c.Request.Method},
-			logger.Field{Key: "path", Value: path},
-			logger.Field{Key: "latency", Value: latency},
-		)
-	})
+	// router.Use(func(c *gin.Context) {
+	// 	path := c.Request.URL.Path
+	// 	start := time.Now()
+	// 	c.Next()
+	// 	latency := time.Since(start)
+	// 	loggerPdt.Info("HTTP request",
+	// 		logger.Field{Key: "status", Value: c.Writer.Status()},
+	// 		logger.Field{Key: "method", Value: c.Request.Method},
+	// 		logger.Field{Key: "path", Value: path},
+	// 		logger.Field{Key: "latency", Value: latency},
+	// 	)
+	// })
 	routes.UseRoutes(router)
 }
