@@ -44,7 +44,7 @@ docker-run:
 	docker build -t $(DOCKER_REPO):$(VERSION) .
 	docker run -d -p ${PORT}:${PORT} --name ${APP_NAME} $(DOCKER_REPO):$(VERSION)
 
-docker-push: docker-build
+docker-push:
 	@echo "Pushing the Docker image to Docker Hub..."
 	docker push $(DOCKER_REPO):$(VERSION)
 

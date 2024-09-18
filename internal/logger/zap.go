@@ -12,14 +12,6 @@ type zapLogger struct {
 	logger *zap.Logger
 }
 
-// func newZapLogger() (Logger, error) {
-// 	logger, err := zap.NewProduction()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return &zapLogger{logger: logger}, nil
-// }
-
 func newZapLogger() (Logger, error) {
 	config := zap.NewProductionConfig()
 	config.EncoderConfig.TimeKey = ""
