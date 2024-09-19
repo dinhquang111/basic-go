@@ -6,10 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UseRoutes(router *gin.Engine) {
-
+func SetupRoutes(router *gin.Engine) {
 	router.GET("/health", handlers.HealthCheck)
 	AddSearchRoutes(router)
-
-	router.Run(":8080")
 }

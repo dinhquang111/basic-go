@@ -11,7 +11,6 @@ type Field struct {
 	Value interface{}
 }
 
-func NewLogger() Logger {
-	logger, _ := newZapLogger()
-	return logger
+func SetupLogger() {
+	SetupZeroLogger()
 }

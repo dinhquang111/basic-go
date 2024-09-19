@@ -2,10 +2,8 @@ package main
 
 import (
 	"test-go/internal/api/routes"
-	"time"
-
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	"test-go/internal/logger"
+	"test-go/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -51,34 +49,10 @@ func main() {
 	// search.ConnectElasticSearch(elasticSearchHost)
 	// loggerPdt := logger.NewLogger()
 
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	router := gin.New()
-	router.Use(func(c *gin.Context) {
-		start := time.Now()
-		raw := c.Request.URL.RawQuery
-
-		c.Next()
-
-		latency := time.Since(start).Milliseconds()
-
-		var zeroLog *zerolog.Event
-		status := c.Writer.Status()
-		switch {
-		case status < 400:
-			zeroLog = log.Info()
-		case status < 500:
-			zeroLog = log.Warn()
-		default:
-			zeroLog = log.Error()
-		}
-		zeroLog.
-			Int("status", c.Writer.Status()).
-			Int64("latency", latency).
-			Str("method", c.Request.Method).
-			Str("path", c.Request.URL.Path).
-			Str("method", c.Request.Method).
-			Str("query", raw).
-			Msg("HTTP request completed")
-	})
-	routes.UseRoutes(router)
+	logger.SetupLogger()
+	engine := gin.New()
+	engine.Use(middleware.Logger())
+	engine.Use(middleware.ErrorHandler())
+	routes.SetupRoutes(engine)
+	engine.Run(":8080")
 }

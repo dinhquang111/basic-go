@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basic-go-deployment
+spec:
+  selector:
+    matchLabels:
+      app: basic-go
+  template:
+    metadata:
+      labels:
+        app: basic-go
+    spec:
+      containers:
+      - name: basic-go
+        image: darthmalgus1997/basic-go-service:v1.0.2
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: service-name
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.selector.matchLabels.app
