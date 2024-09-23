@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -12,11 +13,18 @@ func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 		raw := c.Request.URL.RawQuery
+		id := uuid.NewString()
+
+		log.Info().
+			Str("id", id).
+			Str("method", c.Request.Method).
+			Str("path", c.Request.URL.Path).
+			Msg(raw)
 
 		c.Next()
 
-		latency := time.Since(start).Milliseconds()
 		var zeroLog *zerolog.Event
+		latency := time.Since(start).Milliseconds()
 		status := c.Writer.Status()
 		switch {
 		case status < 400:
@@ -27,12 +35,9 @@ func Logger() gin.HandlerFunc {
 			zeroLog = log.Error()
 		}
 		zeroLog.
+			Str("id", id).
 			Int("status", c.Writer.Status()).
 			Int64("latency", latency).
-			Str("method", c.Request.Method).
-			Str("path", c.Request.URL.Path).
-			Str("method", c.Request.Method).
-			Str("query", raw).
 			Msg("HTTP request completed")
 	}
 }
@@ -40,7 +45,6 @@ func Logger() gin.HandlerFunc {
 func ErrorHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
-
 		status := c.Writer.Status()
 		if status < 500 {
 			return

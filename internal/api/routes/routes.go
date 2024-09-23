@@ -7,6 +7,7 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
-	router.GET("/health", handlers.HealthCheck)
+	router.POST("/", handlers.HandleTelegramBotMessage)
+	router.POST("/health", handlers.HealthCheck)
 	AddSearchRoutes(router)
 }
