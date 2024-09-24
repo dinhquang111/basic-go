@@ -15,12 +15,6 @@ func Logger() gin.HandlerFunc {
 		raw := c.Request.URL.RawQuery
 		id := uuid.NewString()
 
-		log.Info().
-			Str("id", id).
-			Str("method", c.Request.Method).
-			Str("path", c.Request.URL.Path).
-			Msg(raw)
-
 		c.Next()
 
 		var zeroLog *zerolog.Event
@@ -36,6 +30,9 @@ func Logger() gin.HandlerFunc {
 		}
 		zeroLog.
 			Str("id", id).
+			Str("method", c.Request.Method).
+			Str("query", raw).
+			Str("path", c.Request.URL.Path).
 			Int("status", c.Writer.Status()).
 			Int64("latency", latency).
 			Msg("HTTP request completed")

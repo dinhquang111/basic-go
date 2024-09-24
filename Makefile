@@ -3,6 +3,7 @@ DOCKER_USERNAME := darthmalgus1997
 DOCKER_REPO := $(DOCKER_USERNAME)/$(APP_NAME)
 VERSION := 1.0.0
 PORT := 8080
+OUTPUT_FILE= bin/main.exe
 
 push:
 	@echo "Committing code to current branch..."
@@ -26,8 +27,10 @@ release:
 	"
 	@echo "Release created successfully."
 
-run:
-	go run cmd/api/main.go
+run: swag
+	go build -o ./bin/main.exe ./cmd/api/main.go
+	@cmd /c start http://localhost:8080/swagger/index.html
+	@$(OUTPUT_FILE)
 
 merge:
 	@powershell -Command " \
@@ -51,3 +54,8 @@ docker-push:
 docker-rm-container:
 	docker stop ${APP_NAME}
 	docker rm ${APP_NAME}
+
+swag:
+	swag init -g cmd/api/main.go
+	
+	
