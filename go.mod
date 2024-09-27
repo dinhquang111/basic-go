@@ -1,4 +1,4 @@
-module test-go
+module basic-go
 
 go 1.22.6
 

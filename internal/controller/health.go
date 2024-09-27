@@ -24,3 +24,16 @@ func (c *Controller) HealthCheck(ctx *gin.Context) {
 		"buildTime": BuildTime,
 	})
 }
+
+// @Summary		Health check application
+// @Description	Health check and return app's metadata
+// @Produce		json
+// @Success		200	{object}	string
+// @Router			/health [post]
+func (c *Controller) HealthCheck1(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"version":   Version,
+		"commit":    Commit,
+		"buildTime": BuildTime,
+	})
+}

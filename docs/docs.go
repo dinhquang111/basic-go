@@ -34,6 +34,21 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Health check and return app's metadata",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Health check application",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         }
     },

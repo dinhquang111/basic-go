@@ -1,12 +1,12 @@
 package handlers
 
 import (
+	"basic-go/internal/search"
 	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
-	"test-go/internal/search"
 
 	"github.com/gin-gonic/gin"
 )

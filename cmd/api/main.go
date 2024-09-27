@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "test-go/docs"
-	"test-go/internal/api/routes"
-	"test-go/internal/jenkins"
-	"test-go/internal/logger"
-	"test-go/internal/middleware"
+	_ "basic-go/docs"
+	"basic-go/internal/api/routes"
+	"basic-go/internal/jenkins"
+	"basic-go/internal/logger"
+	"basic-go/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )

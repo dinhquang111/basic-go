@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"basic-go/internal/jenkins"
 	"fmt"
 	"net/http"
-	"test-go/internal/jenkins"
 
 	"github.com/gin-gonic/gin"
 )
