@@ -1,7 +1,7 @@
 APP_NAME := basic-go-service
 DOCKER_USERNAME := darthmalgus1997
 DOCKER_REPO := $(DOCKER_USERNAME)/$(APP_NAME)
-VERSION := 1.0.0
+VERSION := 1.0.6
 PORT := 8080
 OUTPUT_FILE= bin/main.exe
 
@@ -57,5 +57,3 @@ docker-rm-container:
 
 swag:
 	swag init -g cmd/api/main.go
-	
-	

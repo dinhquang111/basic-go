@@ -31,12 +31,12 @@ type RequestMessage struct {
 }
 
 func ValidateJenkinsJob() {
-	job, err := jenkins.JenkinClient.GetJob(jenkins.JenkinCtx, "Backend", "CLS", "Staging")
+	job, err := jenkins.Client.GetJob(jenkins.Ctx, "Backend", "CLS", "Staging")
 	if err != nil {
 		panic(err)
 	}
-	details, _ := job.GetParameters(jenkins.JenkinCtx)
-	isBuilding, _ := job.IsRunning(jenkins.JenkinCtx)
+	details, _ := job.GetParameters(jenkins.Ctx)
+	isBuilding, _ := job.IsRunning(jenkins.Ctx)
 	fmt.Print(details, isBuilding)
 }
 

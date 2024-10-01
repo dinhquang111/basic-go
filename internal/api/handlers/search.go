@@ -57,7 +57,7 @@ func Query(c *gin.Context) {
 
 	// Extract hits from the response
 	hits := response["hits"].(map[string]interface{})["hits"].([]interface{})
-	results := []map[string]interface{}{}
+	var results []map[string]interface{}
 
 	for _, hit := range hits {
 		doc := hit.(map[string]interface{})["_source"].(map[string]interface{})

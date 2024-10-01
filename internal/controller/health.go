@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 var (
@@ -12,7 +11,7 @@ var (
 	BuildTime = "unknown"
 )
 
-// @Summary		Health check application
+// HealthCheck @Summary		Health check application
 // @Description	Health check and return app's metadata
 // @Produce		json
 // @Success		200	{object}	string
@@ -25,7 +24,7 @@ func (c *Controller) HealthCheck(ctx *gin.Context) {
 	})
 }
 
-// @Summary		Health check application
+// HealthCheck1 @Summary		Health check application
 // @Description	Health check and return app's metadata
 // @Produce		json
 // @Success		200	{object}	string
