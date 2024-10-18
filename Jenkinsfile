@@ -5,8 +5,8 @@ pipeline {
         DOCKER_IMAGE = 'basic-go'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_CONTAINER_NAME = 'basic-go'
-        TELEGRAM_BOT_TOKEN = '6654034396:AAEc3hoa3r11NRfMb9ALhXmjWjNzOvozEds'
-        TELEGRAM_CHAT_ID = '5131367719'
+        TELEGRAM_BOT_TOKEN = ''
+        TELEGRAM_CHAT_ID = ''
     }
 
     stages {
